@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import HomePage from '@/components/MyHome'
+import MenuSettings from '@/components/MyTree'
+import list from '@/components/list'
+import Permission from '@/components/Permission'
 
 Vue.use(Router)
 
@@ -8,8 +11,23 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'HomePage',
+      component: HomePage
+    },
+    {
+      path: '/menuSettings',
+      name: 'MenuSettings',
+      component: MenuSettings
+    },
+    {
+      path: '/list',
+      name: 'list',
+      component: list
+    },
+    {
+      path: '/Permission',
+      name: 'Permission',
+      component: Permission
     }
   ]
 })

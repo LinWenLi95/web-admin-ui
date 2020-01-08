@@ -22,37 +22,22 @@
 2. 修改根目录下面的index.html文件，把title改成你的项目名称（非必要）
 3. 如果已执行过`npm instrall`，需要删掉node_modules文件夹，重新执行一次`npm instrall`，之前通过npm安装的插件，也要重新安装.
 
+#### 安装Element UI
+1. 在项目路径下执行`npm i element-ui -S`
+2. 在main.js中添加
+    ```javascript
+    import ElementUI from 'element-ui';
+    import 'element-ui/lib/theme-chalk/index.css';
+    
+    Vue.use(ElementUI);
+    ```
+#### 安装Axios
+1. 在项目路径下执行`npm install axios`
+2. 在main.js中添加
+    ```javascript
+    import axios from 'axios'
+    
+    Vue.prototype.$axios = axios
+    ```
 
 
-
-
-# vue-template
-
-> A Vue.js project
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
