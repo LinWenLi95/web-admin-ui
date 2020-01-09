@@ -19,7 +19,7 @@
 
     <el-container>
       <!--左侧菜单-->
-      <el-menu class="aside-menu" :unique-opened="uniqueOpened" :router="router" @open="collapseOpen"
+      <el-menu :unique-opened="uniqueOpened" :router="router" @open="collapseOpen"
                ref="elMenu" @close="collapseClose" :collapse="isCollapse" :default-active="defaultActive"
                @select="handleSelect">
         <el-submenu v-for="(item,index) in menuList" :key="index" v-if="item.parentId==0" :index="item.url">
@@ -43,10 +43,10 @@
           <el-breadcrumb-item v-for="(item,index) in breadcrumb" :key="index">{{breadcrumb[index]}}
           </el-breadcrumb-item>
         </el-breadcrumb>
-        <label>{{defaultActive}}</label>
-
         <!--路由主体页面-->
-        <router-view/>
+        <el-container class="main">
+          <router-view/>
+        </el-container>
       </el-main>
 
     </el-container>
@@ -163,13 +163,10 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   /* container css start */
-  .el-container {
+  .el-container, .el-main {
+    padding: 0px;
     margin: 0px;
     height: 100%;
-  }
-
-  .el-main {
-    padding: 0px;
   }
 
   /* container css end */
@@ -186,11 +183,6 @@
     float: right;
   }
 
-  /* .private-letter {
-      position: relative;
-      float: right;
-  } */
-
   .user-avatar {
     cursor: pointer;
     width: 40px;
@@ -204,16 +196,22 @@
 
   /* header css end */
   /* aside css start */
-  .aside-menu:not(.el-menu--collapse) {
+  .el-menu:not(.el-menu--collapse) {
     width: 200px;
     height: 100%;
     min-height: 400px;
+    min-width: 200px;
   }
 
   /* aside css end */
   /* main css start */
   .el-breadcrumb {
     margin: 20px;
+  }
+
+  .main {
+    /*上右下左*/
+    margin: 20px 40px 40px 40px;
   }
 
   /* main css end */

@@ -4,6 +4,7 @@ import HomePage from '@/components/MyHome'
 import MenuSettings from '@/components/MyTree'
 import list from '@/components/list'
 import Permission from '@/components/Permission'
+import UserList from '@/components/UserList'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/Permission',
       name: 'Permission',
       component: Permission
+    },
+    {
+      path: '/UserList',
+      name: 'UserList',
+      component: UserList
     }
   ]
 })

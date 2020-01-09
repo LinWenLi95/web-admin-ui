@@ -22,6 +22,8 @@
 2. 修改根目录下面的index.html文件，把title改成你的项目名称（非必要）
 3. 如果已执行过`npm instrall`，需要删掉node_modules文件夹，重新执行一次`npm instrall`，之前通过npm安装的插件，也要重新安装.
 
+### 插件安装 在安装后需要在项目路径下重新执行`npm install`
+
 #### 安装Element UI
 1. 在项目路径下执行`npm i element-ui -S`
 2. 在main.js中添加
@@ -39,5 +41,17 @@
     
     Vue.prototype.$axios = axios
     ```
+
+#### 安装moment.js
+1. 在项目路径下执行`npm install moment --save`
+2. 在main.js中添加
+    ```javascript
+    import moment from 'moment'
+    
+    Vue.filter('dateformat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
+        return moment(dataStr).format(pattern)
+    })
+    ```
+3. 使用：`{{ timeData | dateformat()}}`
 
 
