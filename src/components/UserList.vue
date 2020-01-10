@@ -11,7 +11,7 @@
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <el-button>刷新</el-button>
-      <el-button>新增</el-button>
+      <el-button @click="addRow">新增</el-button>
     </div>
     <!--数据表-->
     <el-table :data="tableData" max-height="80%" border resizable stripe>
@@ -33,14 +33,14 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="infoRow(scope.$index, tableData)" type="text" size="small">
-            详情
-          </el-button>
           <el-button @click.native.prevent="editRow(scope.$index, tableData)" type="text" size="small">
             编辑
           </el-button>
           <el-button @click.native.prevent="deleteRow(scope.$index, tableData)" type="text" size="small">
             移除
+          </el-button>
+          <el-button @click.native.prevent="deleteRow(scope.$index, tableData)" type="text" size="small">
+            分配角色
           </el-button>
         </template>
       </el-table-column>
@@ -59,39 +59,36 @@
           <el-form-item label="用户名">
             <el-input v-model="form.username"></el-input>
           </el-form-item>
+          <el-form-item label="密码">
+            <el-input v-model="form.password"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码">
+            <el-input v-model="form.password"></el-input>
+          </el-form-item>
           <el-form-item label="手机号">
             <el-input v-model="form.telephone"></el-input>
           </el-form-item>
           <el-form-item label="邮箱">
             <el-input v-model="form.email"></el-input>
           </el-form-item>
-
-          <el-form-item label="创建时间">
-            <el-col :span="11">
-              <el-date-picker type="datetime" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="启用状态">
-            <el-switch v-model="form.state"></el-switch>
-          </el-form-item>
+          <!--          <el-form-item label="启用状态">-->
+          <!--            <el-switch v-model="form.state"></el-switch>-->
+          <!--          </el-form-item>-->
           <el-form-item label="备注">
             <el-input type="textarea" v-model="form.description"></el-input>
           </el-form-item>
-          <el-form-item>
-<!--            <el-button type="primary" @click="onSubmit">立即创建</el-button>-->
-            <el-button>取消</el-button>
-          </el-form-item>
-<!--          <el-form-item label="活动区域">-->
-<!--            <el-select v-model="form.region" placeholder="请选择活动区域">-->
-<!--              <el-option label="区域一" value="shanghai"></el-option>-->
-<!--              <el-option label="区域二" value="beijing"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
+
+          <!--          <el-form-item label="活动区域">-->
+          <!--            <el-select v-model="form.region" placeholder="请选择活动区域">-->
+          <!--              <el-option label="区域一" value="shanghai"></el-option>-->
+          <!--              <el-option label="区域二" value="beijing"></el-option>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
         </el-form>
       </span>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onSubmit">新增</el-button>
+        <el-button @click="formDialogVisible = false">取 消</el-button>
       </span>
     </el-dialog>
     <!--删除确认对话框-->
@@ -116,31 +113,38 @@
                 operateTitle: '标题',
                 formDialogVisible: false,
                 // form表单
-                form:{
-                  /**id*/
-                  id:0,
-                  /**用户名*/
-                  username:'',
-                  /**手机号*/
-                   telephone:'',
-                  /**邮箱*/
-                   email:'',
-                  /**状态 0禁用,1启动*/
-                   state:0,
-                  /**备注*/
-                   description:'',
-                  /**创建时间*/
-                  createTime:0
-                }
+                form: {
+                    /**id*/
+                    id: 0,
+                    /**用户名*/
+                    username: '',
+                    password: '',
+                    /**手机号*/
+                    telephone: '',
+                    /**邮箱*/
+                    email: '',
+                    /**状态 0禁用,1启动*/
+                    state: 0,
+                    /**备注*/
+                    description: ''
+                },
+                // 提交方式 get post put delete
+                submitMethod:'get'
             }
         },
         created: function () {
             this.handleCurrentChange(1);
         },
         methods: {
-            /*数据列表*/
-            addRow(){
+            // 对话框显示步骤
+            // 1.获取渲染数据
+            // 2.进行页面渲染
+            // 3.显示对话框
 
+            /*数据列表操作*/
+            addRow() {
+                this.operateTitle = "新增";
+                this.formDialogVisible = true;
             },
             // 查看详情
             infoRow(index, rows) {
@@ -149,8 +153,23 @@
             },
             // 编辑
             editRow(index, rows) {
-                this.operateTitle = "编辑";
-                this.formDialogVisible = true;
+                var that = this;
+                that.$axios({
+                    method: 'get',
+                    url: "/api/users/"+rows[index].id,
+                    data: {}
+                }).then(function (res) {
+                    that.form = res.data.data;
+                    that.operateTitle = "编辑";
+                    that.formDialogVisible = true;
+                }).catch(function (err) {
+                    console.log(err);
+                    that.$message({
+                        showClose: true,
+                        message: err.data.msg,
+                        type: 'error'
+                    });
+                });
             },
             // 移除单行
             deleteRow(index, rows) {
@@ -180,7 +199,32 @@
                 })
             },
             /*CRU对话框*/
-
+            onSubmit() {
+                var that = this;
+                that.$axios({
+                    method: 'post',
+                    url: "/api/users/",
+                    data: this.form
+                }).then(function (res) {
+                    // var pageData = res.data.data;
+                    // that.tableData = pageData.records;
+                    // that.total = pageData.total;
+                    console.log(res);
+                    that.formDialogVisible = false;
+                    that.$message({
+                        showClose: true,
+                        message: '操作成功',
+                        type: 'success'
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    that.$message({
+                        showClose: true,
+                        message: err.data.msg,
+                        type: 'error'
+                    });
+                })
+            }
         },
         watch: {}
     }
