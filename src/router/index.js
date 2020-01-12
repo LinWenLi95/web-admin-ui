@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HomePage from '@/components/MyHome'
-import MenuSettings from '@/components/MyTree'
+import MenuTree from '@/components/MenuTree'
 import list from '@/components/list'
 import Permission from '@/components/Permission'
 import UserList from '@/components/UserList'
+import RoleList from '@/components/RoleList'
 
 Vue.use(Router)
 
@@ -16,9 +17,9 @@ export default new Router({
       component: HomePage
     },
     {
-      path: '/menuSettings',
-      name: 'MenuSettings',
-      component: MenuSettings
+      path: '/menus',
+      name: 'MenuTree',
+      component: MenuTree
     },
     {
       path: '/list',
@@ -34,6 +35,11 @@ export default new Router({
       path: '/UserList',
       name: 'UserList',
       component: UserList
+    },
+    {
+      path: '/roles',
+      name: 'roles',
+      component: RoleList
     }
   ]
 })

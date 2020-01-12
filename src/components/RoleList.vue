@@ -15,10 +15,9 @@
     </div>
     <!--数据表-->
     <el-table :data="tableData" max-height="80%" border resizable stripe height="600">
-      <el-table-column prop="id" label="id"></el-table-column>
-      <el-table-column prop="username" label="用户名"></el-table-column>
-      <el-table-column prop="telephone" label="手机号"></el-table-column>
-      <el-table-column prop="email" label="邮箱"></el-table-column>
+      <el-table-column prop="id" label="角色id"></el-table-column>
+      <el-table-column prop="name" label="中文名称"></el-table-column>
+      <el-table-column prop="enname" label="英文名称"></el-table-column>
       <el-table-column prop="state" label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.state===1" type="success">启用</el-tag>
@@ -40,7 +39,7 @@
             移除
           </el-button>
           <el-button @click.native.prevent="editRow(scope.$index, tableData)" type="text" size="small">
-            分配角色
+            分配权限
           </el-button>
         </template>
       </el-table-column>
@@ -56,34 +55,15 @@
     <el-dialog :title="operateTitle" :visible.sync="formDialogVisible" @close="formClean" :width="dialogWidth">
       <span v-if="operateType !== operateTypes.REMOVE">
         <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="用户名">
-            <el-input v-model="form.username"></el-input>
+          <el-form-item label="角色名称">
+            <el-input v-model="form.name"></el-input>
           </el-form-item>
-          <el-form-item label="密码">
-            <el-input v-model="form.password"></el-input>
+          <el-form-item label="英文名称">
+            <el-input v-model="form.enname"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码">
-            <el-input v-model="form.password"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号">
-            <el-input v-model="form.telephone"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱">
-            <el-input v-model="form.email"></el-input>
-          </el-form-item>
-          <!--          <el-form-item label="启用状态">-->
-          <!--            <el-switch v-model="form.state"></el-switch>-->
-          <!--          </el-form-item>-->
           <el-form-item label="备注">
             <el-input type="textarea" v-model="form.description"></el-input>
           </el-form-item>
-
-          <!--          <el-form-item label="活动区域">-->
-          <!--            <el-select v-model="form.region" placeholder="请选择活动区域">-->
-          <!--              <el-option label="区域一" value="shanghai"></el-option>-->
-          <!--              <el-option label="区域二" value="beijing"></el-option>-->
-          <!--            </el-select>-->
-          <!--          </el-form-item>-->
         </el-form>
       </span>
       <!--删除确认对话框-->
@@ -92,7 +72,7 @@
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit"
-                   v-if="operateType != operateTypes.INFO">{{confirmName}}</el-button>
+                   v-if="operateType !== operateTypes.INFO">{{confirmName}}</el-button>
         <el-button @click="formDialogVisible = false">取消</el-button>
       </span>
     </el-dialog>
@@ -130,13 +110,9 @@
         form: {
           /**id*/
           id: 0,
-          /**用户名*/
-          username: '',
-          password: '',
-          /**手机号*/
-          telephone: '',
-          /**邮箱*/
-          email: '',
+          /**角色中文名称*/
+          name: '',
+          enname: '',
           /**状态 0禁用,1启动*/
           state: 0,
           /**备注*/
@@ -179,7 +155,7 @@
         var that = this;
         that.$axios({
           method: 'get',
-          url: "/api/users/" + rows[index].id,
+          url: "/api/roles/" + rows[index].id,
           data: {}
         }).then(function (res) {
           that.form = res.data.data;
@@ -216,7 +192,7 @@
         //this代表vue对象，之前在入口文件中把axios挂载到了vue中，所以这里直接用this.$axios调用axios对象
         that.$axios({
           method: 'get',
-          url: "/api/users/?pageSize=" + that.pageSize + "&currentPage=" + currentPage,
+          url: "/api/roles/?pageSize=" + that.pageSize + "&currentPage=" + currentPage,
           data: {}
         }).then(function (res) {
           var pageData = res.data.data;
@@ -232,7 +208,7 @@
       onSubmit() {
         // 确认请求类型
         var $method = 'GET';
-        var $url = "/api/users/";
+        var $url = "/api/roles/";
         switch (this.operateType) {
           case this.operateTypes.INFO:
             $method = "GET";
@@ -270,17 +246,13 @@
         this.form = {
           /**id*/
           id: 0,
-          /**用户名*/
-          username: '',
-          password: '',
-          /**手机号*/
-          telephone: '',
-          /**邮箱*/
-          email: '',
-          /**状态 0禁用,1启动*/
-          state: 0,
-          /**备注*/
-          description: ''
+            /**角色中文名称*/
+            name: '',
+            enname: '',
+            /**状态 0禁用,1启动*/
+            state: 0,
+            /**备注*/
+            description: ''
         }
       }
     },
